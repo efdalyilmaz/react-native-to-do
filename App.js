@@ -1,21 +1,83 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { StyleSheet, TextInput, View , Platform} from 'react-native';
+import Header from './Header';
+import Footer from './Footer';
 
-export default function App() {
+export default class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      allComplete: false,
+      value: "",
+      items: []
+    },
+    this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
+  }
+
+  handleToggleAllComplete(){
+    const complete = !this.state.allComplete;
+
+    const newItems = this.state.items.map((item) => ({
+      ...item,
+      complete
+    }));
+    console.table(newItems);
+    this.setState({
+      items: newItems,
+      allComplete: complete
+    });
+  }
+
+  handleAddItem(){
+    if(!this.state.value){
+      return;
+    }
+
+    const newItems = [
+      ...this.state.items,
+      {
+        key: Date.now(),
+        text: this.state.value,
+        complete: false
+      }
+    ];
+
+    this.setState({
+      items: newItems,
+      value: ""
+    });
+  }
+
+render() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Header 
+        value={this.state.value}
+        onAddItem={this.handleAddItem}
+        onChange={(value) => this.setState({value})}
+        onToggleAllComplete={this.handleToggleAllComplete}
+      />
+      <View style={styles.content}>
+      
+      </View>
+      <Footer />
     </View>
   );
 }
+}
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#F5F5F5',
+    ...Platform.select({
+      ios:{ paddingTop:100 }
+    })
+  },
+  content: {
+    flex: 1
   },
 });
