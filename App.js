@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, View , Platform, FlatList, Keyboard} from 'react-native';
+import { StyleSheet, View , Platform, FlatList} from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import Row from './Row';
@@ -36,7 +36,6 @@ export default class App extends Component {
       ...item,
       complete
     }));
-    console.table(newItems);
 
     this.setSource(newItems, newItems, {allComplete: complete});
   }
@@ -55,11 +54,11 @@ export default class App extends Component {
       }
     ];
 
-    console.log("this.state.dataSource", this.state.dataSource)
     this.setSource(newItems, newItems, {value: ""});
   }
 
- renderItem (item )  {
+ renderItem(item){
+   console.log("renderItem item", item);
   return  (<Row text={item.text} />);
  }
 
@@ -76,7 +75,7 @@ render() {
         <FlatList
           style={styles.list}
           data={this.state.dataSource}
-          renderItem={this.renderItem}
+          renderItem={( {item} ) => {return this.renderItem(item);}}
           keyExtractor={item => item.key}
         />
       </View>
