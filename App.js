@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { StyleSheet, TextInput, View , Platform} from 'react-native';
+import { StyleSheet, View , Platform, FlatList, Keyboard} from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
+import Row from './Row';
 
 export default class App extends Component {
 
@@ -10,10 +11,22 @@ export default class App extends Component {
     this.state = {
       allComplete: false,
       value: "",
-      items: []
+      items: [],
+      dataSource : []
     },
+
+    this.setSource = this.setSource.bind(this);
+    this.renderItem = this.renderItem.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
+  }
+
+  setSource(items, itemsDataSource, otherState = {}){
+    this.setState({
+      items,
+      dataSource: itemsDataSource,
+      ...otherState
+    });
   }
 
   handleToggleAllComplete(){
@@ -24,10 +37,8 @@ export default class App extends Component {
       complete
     }));
     console.table(newItems);
-    this.setState({
-      items: newItems,
-      allComplete: complete
-    });
+
+    this.setSource(newItems, newItems, {allComplete: complete});
   }
 
   handleAddItem(){
@@ -44,11 +55,13 @@ export default class App extends Component {
       }
     ];
 
-    this.setState({
-      items: newItems,
-      value: ""
-    });
+    console.log("this.state.dataSource", this.state.dataSource)
+    this.setSource(newItems, newItems, {value: ""});
   }
+
+ renderItem (item )  {
+  return  (<Row text={item.text} />);
+ }
 
 render() {
   return (
@@ -60,7 +73,12 @@ render() {
         onToggleAllComplete={this.handleToggleAllComplete}
       />
       <View style={styles.content}>
-      
+        <FlatList
+          style={styles.list}
+          data={this.state.dataSource}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.key}
+        />
       </View>
       <Footer />
     </View>
@@ -72,12 +90,19 @@ render() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     ...Platform.select({
-      ios:{ paddingTop:100 }
+      ios:{ paddingTop:30 }
     })
   },
   content: {
     flex: 1
   },
+  list:{
+    backgroundColor: '#FFF',
+  },
+  seperator:{
+    borderWidth:1,
+    borderColor:"#F5F5F5"
+  }
 });
