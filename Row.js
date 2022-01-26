@@ -5,9 +5,9 @@ export default function Row(props) {
   return (
     <View style={styles.container}>
       <Switch value={props.complete}/>
-    <View style={styles.textWrap}>
+      <View style={styles.textWrap}>
         <Text style={styles.text}>{props.text}</Text>
-    </View>
+      </View>
     </View>
   );
 }
