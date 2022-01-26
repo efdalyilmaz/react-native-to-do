@@ -18,6 +18,7 @@ export default class App extends Component {
     this.setSource = this.setSource.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
   }
 
@@ -28,6 +29,23 @@ export default class App extends Component {
       ...otherState
     });
   }
+
+  handleToggleComplete(key, complete){
+ 
+    const newItems = this.state.items.map((item) => {
+
+      if(item.key != key){
+        return item;
+      }
+      return {
+        ...item,
+        complete
+      };
+    });
+
+    this.setSource(newItems, newItems);
+  }
+
 
   handleToggleAllComplete(){
     const complete = !this.state.allComplete;
@@ -58,8 +76,7 @@ export default class App extends Component {
   }
 
  renderItem(item){
-   console.log("renderItem item", item);
-  return  (<Row text={item.text} />);
+  return  (<Row text={item.text} onComplete={(complete) => this.handleToggleComplete(key, complete)} {...item}/>);
  }
 
 render() {
