@@ -5,6 +5,7 @@ export default function Footer(props) {
   const {filter} = props;
   return (
     <View style={styles.container}>
+      <Text>{props.count} count</Text>
       <View style={styles.filters}>
         <TouchableOpacity style={[styles.filter, filter==="ALL" && styles.selected]} onPress={() => props.onFilter("ALL")}>
           <Text>All</Text>
