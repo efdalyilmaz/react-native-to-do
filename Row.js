@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Switch} from 'react-native';
 
 export default function Row(props) {
   const {complete} = props;
+  console.log("🚀 ~ file: Row.js ~ line 6 ~ Row ~ props", props);
+  
   return (
     <View style={styles.container}>
       <Switch value={complete} onValueChange={props.onComplete}/>

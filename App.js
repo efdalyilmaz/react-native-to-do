@@ -76,7 +76,8 @@ export default class App extends Component {
   }
 
  renderItem(item){
-  return  (<Row text={item.text} onComplete={(complete) => this.handleToggleComplete(key, complete)} {...item}/>);
+  console.log("🚀 ~ file: App.js ~ line 79 ~ App ~ renderItem ~ item", item)
+  return  (<Row text={item.text} onComplete={(complete) => this.handleToggleComplete(item.key, complete)} {...item}/>);
  }
 
 render() {
