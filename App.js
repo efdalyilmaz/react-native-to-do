@@ -4,12 +4,24 @@ import Header from './Header';
 import Footer from './Footer';
 import Row from './Row';
 
+const filterItems = (filter, items) => {
+console.log("🚀 ~ file: App.js ~ line 8 ~ filterItems ~ items", items);
+console.log("🚀 ~ file: App.js ~ line 16 ~ filterItems ~ filter", filter);
+  
+  return items.filter(item => {
+    if(filter === "ALL") return true;
+    if(filter === "COMPLETED") return item.complete;
+    if(filter === "ACTIVE") return !item.complete;
+  });
+}
+
 export default class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       allComplete: false,
+      filter: "ALL",
       value: "",
       items: [],
       dataSource : []
@@ -17,6 +29,7 @@ export default class App extends Component {
 
     this.setSource = this.setSource.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
@@ -31,13 +44,16 @@ export default class App extends Component {
     });
   }
 
+  handleFilter(filter){
+    this.setSource( this.state.items, filterItems(filter, this.state.items), {filter});
+  }
 
   handleRemoveItem(key){
     const newItems = this.state.items.filter((item) => {
       return item.key != key;
     });
 
-    this.setSource(newItems, newItems);
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
   }
 
   handleToggleComplete(key, complete){
@@ -53,7 +69,7 @@ export default class App extends Component {
       };
     });
 
-    this.setSource(newItems, newItems);
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
   }
 
 
@@ -110,7 +126,10 @@ render() {
           keyExtractor={item => item.key}
         />
       </View>
-      <Footer />
+      <Footer 
+        filter={this.state.filter}
+        onFilter={this.handleFilter}
+      />
     </View>
   );
 }
