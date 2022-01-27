@@ -1,9 +1,8 @@
 import React from 'react';
-import { Text, View, StyleSheet, Switch} from 'react-native';
+import { Text, View, StyleSheet, Switch, TouchableOpacity} from 'react-native';
 
 export default function Row(props) {
   const {complete} = props;
-  console.log("🚀 ~ file: Row.js ~ line 6 ~ Row ~ props", props);
   
   return (
     <View style={styles.container}>
@@ -11,6 +10,9 @@ export default function Row(props) {
       <View style={styles.textWrap}>
         <Text style={[styles.text, complete && styles.complete]}>{props.text}</Text>
       </View>
+      <TouchableOpacity onPress={props.onRemove}>  
+        <Text style={styles.destroy}>X</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -26,12 +28,16 @@ const styles = StyleSheet.create({
       flex:1,
       marginHorizontal:10,
     },
-    text:{
-        fontSize : 24,
-        color: "#4d4d4d"
-    },
+    
     complete:{
       textDecorationLine:"line-through"
+    },
+    text:{
+      fontSize : 24,
+      color: "#4d4d4d"
+    },
+    destroy:{
+      fontSize : 20,
+      color: "#cc9a9a"
     }
-
 });

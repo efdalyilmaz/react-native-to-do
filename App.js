@@ -18,6 +18,7 @@ export default class App extends Component {
     this.setSource = this.setSource.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
   }
@@ -28,6 +29,15 @@ export default class App extends Component {
       dataSource: itemsDataSource,
       ...otherState
     });
+  }
+
+
+  handleRemoveItem(key){
+    const newItems = this.state.items.filter((item) => {
+      return item.key != key;
+    });
+
+    this.setSource(newItems, newItems);
   }
 
   handleToggleComplete(key, complete){
@@ -76,8 +86,11 @@ export default class App extends Component {
   }
 
  renderItem(item){
-  console.log("🚀 ~ file: App.js ~ line 79 ~ App ~ renderItem ~ item", item)
-  return  (<Row text={item.text} onComplete={(complete) => this.handleToggleComplete(item.key, complete)} {...item}/>);
+  return  (<Row text={item.text} 
+              onComplete={(complete) => this.handleToggleComplete(item.key, complete)}
+              onRemove={() => this.handleRemoveItem(item.key)} 
+              {...item}
+          />);
  }
 
 render() {
