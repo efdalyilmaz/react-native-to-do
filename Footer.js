@@ -17,6 +17,9 @@ export default function Footer(props) {
           <Text>Completed</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={() => props.ClearComplete()}>
+          <Text>Clear Completed</Text>
+        </TouchableOpacity>
     </View>
   );
 }

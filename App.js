@@ -30,6 +30,7 @@ export default class App extends Component {
     this.setSource = this.setSource.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
+    this.handleClearComplete = this.handleClearComplete.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
@@ -55,6 +56,13 @@ export default class App extends Component {
 
     this.setSource(newItems, filterItems(this.state.filter, newItems));
   }
+
+
+  handleClearComplete(){
+    const newItems = filterItems("ACTIVE", this.state.items);
+    this.setSource(newItems, newItems);
+  }
+
 
   handleToggleComplete(key, complete){
  
@@ -130,6 +138,7 @@ render() {
         count={filterItems("ACTIVE", this.state.items).length}
         filter={this.state.filter}
         onFilter={this.handleFilter}
+        ClearComplete = {this.handleClearComplete}
       />
     </View>
   );
