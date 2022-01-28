@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
-import { StyleSheet, View , Platform, FlatList } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import { StyleSheet, View , Platform, FlatList, ActivityIndicator } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import Row from './Row';
 
 const filterItems = (filter, items) => {
-console.log("🚀 ~ file: App.js ~ line 8 ~ filterItems ~ items", items);
-console.log("🚀 ~ file: App.js ~ line 16 ~ filterItems ~ filter", filter);
-  
   return items.filter(item => {
     if(filter === "ALL") return true;
     if(filter === "COMPLETED") return item.complete;
@@ -30,23 +26,13 @@ export default class App extends Component {
 
     this.setSource = this.setSource.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.renderLoading = this.renderLoading.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.handleClearComplete = this.handleClearComplete.bind(this);
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
-  }
-
-  componentDidMount(){
-    AsyncStorage.getItem("Items").then(json => {
-      try {
-        const items = JSON.parse(json);
-        this.setSource(items, items);
-      } catch (error) {
-        
-      }
-    });
   }
 
   setSource(items, itemsDataSource, otherState = {}){
@@ -129,6 +115,20 @@ export default class App extends Component {
           />);
  }
 
+ renderLoading(){
+   if(!this.state.loading)
+   {
+     return <View></View>;
+   }
+   
+   return (<View style={styles.loading}>
+              <ActivityIndicator 
+                animating
+                size="large"
+              />
+            </View>);
+ }
+
 render() {
   return (
     <View style={styles.container}>
@@ -152,6 +152,7 @@ render() {
         onFilter={this.handleFilter}
         onClearComplete = {this.handleClearComplete}
       />
+      {this.renderLoading()}
     </View>
   );
 }
@@ -175,5 +176,15 @@ const styles = StyleSheet.create({
   seperator:{
     borderWidth:1,
     borderColor:"#F5F5F5"
+  },
+  loading:{
+    position:"absolute",
+    top:0,
+    right:0,
+    bottom:0,
+    left:0,
+    alignItems:"center",
+    justifyContent:"center",
+    backgroundColor:"rgba(0,0,0,.2)"
   }
 });
