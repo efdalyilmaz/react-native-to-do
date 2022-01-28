@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { StyleSheet, View , Platform, FlatList} from 'react-native';
+import { StyleSheet, View , Platform, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import Header from './Header';
 import Footer from './Footer';
 import Row from './Row';
@@ -35,6 +36,17 @@ export default class App extends Component {
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
+  }
+
+  componentDidMount(){
+    AsyncStorage.getItem("Items").then(json => {
+      try {
+        const items = JSON.parse(json);
+        this.setSource(items, items);
+      } catch (error) {
+        
+      }
+    });
   }
 
   setSource(items, itemsDataSource, otherState = {}){
@@ -138,7 +150,7 @@ render() {
         count={filterItems("ACTIVE", this.state.items).length}
         filter={this.state.filter}
         onFilter={this.handleFilter}
-        ClearComplete = {this.handleClearComplete}
+        onClearComplete = {this.handleClearComplete}
       />
     </View>
   );
