@@ -38,7 +38,9 @@ export default class App extends Component {
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleUpdateText = this.handleUpdateText.bind(this);
+    this.handleToggleEditing = this.handleToggleEditing.bind(this);
+    
   }
 
   componentDidMount(){
@@ -89,11 +91,36 @@ export default class App extends Component {
     this.setSource(newItems, newItems);
   }
 
+  handleUpdateText(key, text){
+    const newItems = this.state.items.map((item) => {
+      if(item.key != key){
+        return item;
+      }
+      return {
+        ...item,
+        text
+      };
+    });
+
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
+  }
+
+  handleToggleEditing(key, editing){
+    const newItems = this.state.items.map((item) => {
+      if(item.key != key){
+        return item;
+      }
+      return {
+        ...item,
+        editing
+      };
+    });
+
+    this.setSource(newItems, filterItems(this.state.filter, newItems));
+  }
 
   handleToggleComplete(key, complete){
- 
     const newItems = this.state.items.map((item) => {
-
       if(item.key != key){
         return item;
       }
@@ -137,6 +164,8 @@ export default class App extends Component {
 
  renderItem(item){
   return  (<Row text={item.text} 
+              onUpdate={(text) => this.handleUpdateText(item.key, text)}
+              onToggleEdit={(editing) => this.handleToggleEditing(item.key, editing)}
               onComplete={(complete) => this.handleToggleComplete(item.key, complete)}
               onRemove={() => this.handleRemoveItem(item.key)} 
               {...item}
