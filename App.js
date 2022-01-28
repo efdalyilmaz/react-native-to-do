@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import { StyleSheet, View , Platform, FlatList, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './Header';
 import Footer from './Footer';
 import Row from './Row';
 
 const filterItems = (filter, items) => {
+  if(items == null){
+    return [];
+  }
+
   return items.filter(item => {
     if(filter === "ALL") return true;
     if(filter === "COMPLETED") return item.complete;
@@ -33,15 +38,38 @@ export default class App extends Component {
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleToggleComplete = this.handleToggleComplete.bind(this);
     this.handleToggleAllComplete = this.handleToggleAllComplete.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+
+  componentDidMount(){
+    AsyncStorage.getItem("Items").then(json => {
+      try {
+        if(json != null){
+          const items = JSON.parse(json);
+          this.setSource(items, items);
+        }
+      } catch (error) {
+
+      }
+    });
   }
 
   setSource(items, itemsDataSource, otherState = {}){
+    if(items == null){
+      return;
+    }
+
     this.setState({
       items,
       dataSource: itemsDataSource,
       ...otherState
-    });
+      });
+  
+        AsyncStorage.setItem("Items", JSON.stringify(items));
+      
   }
+
+
 
   handleFilter(filter){
     this.setSource( this.state.items, filterItems(filter, this.state.items), {filter});
@@ -94,7 +122,7 @@ export default class App extends Component {
     if(!this.state.value){
       return;
     }
-
+    
     const newItems = [
       ...this.state.items,
       {
